@@ -36,6 +36,31 @@ const initialAircrafts: Aircraft[] = [
     speed: 5,
     destination: 'B',
   },
+  //To test different directions of airports
+  {
+    id: '005',
+    name: 'paperilennokki',
+    position: { x: -50, y: -100 },
+    direction: 270,
+    speed: 5,
+    destination: 'C',
+  },
+  {
+    id: '006',
+    name: 'drone',
+    position: { x: -50, y: -100 },
+    direction: 270,
+    speed: 5,
+    destination: 'D',
+  },
+  {
+    id: '006',
+    name: 'drone',
+    position: { x: -50, y: -100 },
+    direction: 270,
+    speed: 5,
+    destination: 'E',
+  },
 ]
 
 const initialAirports = [
@@ -43,11 +68,31 @@ const initialAirports = [
     name: 'A',
     position: { x: 100, y: 50 },
     direction: 0,
+    landingRadius: 10,
   },
   {
     name: 'B',
     position: { x: 100, y: -50 },
     direction: 0,
+    landingRadius: 10,
+  },
+  {
+    name: 'C',
+    position: { x: 100, y: -50 },
+    direction: 270,
+    landingRadius: 10,
+  },
+  {
+    name: 'D',
+    position: { x: 100, y: -50 },
+    direction: 90,
+    landingRadius: 10,
+  },
+  {
+    name: 'E',
+    position: { x: 100, y: -50 },
+    direction: 180,
+    landingRadius: 10,
   },
 ]
 

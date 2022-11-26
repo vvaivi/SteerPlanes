@@ -7,6 +7,7 @@ export interface Airport {
   name: string
   position: Point
   direction: number
+  landingRadius: number
 }
 
 export interface Aircraft {
@@ -18,6 +19,8 @@ export interface Aircraft {
   destination: string
   airportDirection?: number
   airportPosition?: Point
+  airportLandingRadius?: number
+  airportLandingPosition?: Point
 }
 
 export interface NoPlaneState {
