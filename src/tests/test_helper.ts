@@ -54,7 +54,7 @@ const initialAircrafts: Aircraft[] = [
     destination: 'D',
   },
   {
-    id: '006',
+    id: '007',
     name: 'drone',
     position: { x: -50, y: -100 },
     direction: 270,
