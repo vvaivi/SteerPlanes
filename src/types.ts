@@ -16,6 +16,8 @@ export interface Aircraft {
   direction: number
   speed: number
   destination: string
+  airportDirection?: number
+  airportPosition?: Point
 }
 
 export interface NoPlaneState {
