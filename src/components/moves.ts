@@ -1,6 +1,6 @@
 import { Aircraft, Airport, NoPlaneState, Point } from '../types'
 import { normalizeHeading } from '../utils/math'
-import { findLandingPoint } from './path'
+import { findLandingPoint, getLandingCirclePoints } from './path'
 
 const getDirection = (pointFrom: Point, pointTo: Point) => {
   const direction = Math.atan2(pointTo.y - pointFrom.y, pointTo.x - pointFrom.x) * (180 / Math.PI) //Convert to degrees
@@ -21,4 +21,16 @@ export const findDestination = (gameState: NoPlaneState, aircraft: Aircraft) => 
   }
 
   findLandingPoint(aircraft)
+}
+
+export const selectClosestTangentPoint = (aircraft: Aircraft) => {
+  const tangentPoints = getLandingCirclePoints(aircraft)
+
+  var distances: number[] = []
+
+  distances.push(getDistance(tangentPoints[0], aircraft.position))
+  distances.push(getDistance(tangentPoints[1], aircraft.position))
+
+  //Coordinates of a point that is closest to airplane
+  return tangentPoints[distances.indexOf(Math.min(...distances))]
 }

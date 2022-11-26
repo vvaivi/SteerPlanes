@@ -1,5 +1,5 @@
 import { testGameState } from './test_helper'
-import { findDestination } from '../components/moves'
+import { findDestination, selectClosestTangentPoint } from '../components/moves'
 import { getLandingCirclePoints } from '../components/path'
 
 describe('When game data is saved', () => {
@@ -64,5 +64,19 @@ describe('When game data is saved', () => {
     expect(Math.round(points7[0].y)).toBe(testGameState.aircrafts[7].airportLandingPosition!.y - 10)
     expect(Math.round(points7[1].x)).toBe(testGameState.aircrafts[7].airportLandingPosition!.x + 10)
     expect(Math.round(points7[1].y)).toBe(testGameState.aircrafts[7].airportLandingPosition!.y + 10)
+  })
+})
+
+describe('When steering planes', () => {
+  beforeAll(() => {
+    for (const plane of testGameState.aircrafts) {
+      findDestination(testGameState, plane)
+    }
+  })
+
+  test('Closest tangent point can be found when both not equal', async () => {
+    const closestPoint3 = selectClosestTangentPoint(testGameState.aircrafts[3])
+    expect(Math.round(closestPoint3.x)).toBe(90)
+    expect(Math.round(closestPoint3.y)).toBe(-50 - 14)
   })
 })
