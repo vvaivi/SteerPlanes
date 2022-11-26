@@ -61,6 +61,14 @@ const initialAircrafts: Aircraft[] = [
     speed: 5,
     destination: 'E',
   },
+  {
+    id: '008',
+    name: 'leija',
+    position: { x: -50, y: -100 },
+    direction: 45,
+    speed: 5,
+    destination: 'A',
+  },
 ]
 
 const initialAirports = [
