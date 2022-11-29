@@ -21,17 +21,17 @@ export const getLandingCircleRadius = (aircraft: Aircraft) => {
 export const getLandingCirclePoints = (aircraft: Aircraft) => {
   const x1 =
     aircraft.airportLandingPosition!.x +
-    getLandingCircleRadius(aircraft) * Math.sin((aircraft.airportDirection! * Math.PI) / 180) //Convert to radians
+    getLandingCircleRadius(aircraft) * 2 * Math.sin((aircraft.airportDirection! * Math.PI) / 180) //Convert to radians
   const y1 =
     aircraft.airportLandingPosition!.y +
-    getLandingCircleRadius(aircraft) * Math.cos((aircraft.airportDirection! * Math.PI) / 180)
+    getLandingCircleRadius(aircraft) * 2 * Math.cos((aircraft.airportDirection! * Math.PI) / 180)
 
   const x2 =
     aircraft.airportLandingPosition!.x -
-    getLandingCircleRadius(aircraft) * Math.sin((aircraft.airportDirection! * Math.PI) / 180) //Convert to radians
+    getLandingCircleRadius(aircraft) * 2 * Math.sin((aircraft.airportDirection! * Math.PI) / 180) //Convert to radians
   const y2 =
     aircraft.airportLandingPosition!.y -
-    getLandingCircleRadius(aircraft) * Math.cos((aircraft.airportDirection! * Math.PI) / 180)
+    getLandingCircleRadius(aircraft) * 2 * Math.cos((aircraft.airportDirection! * Math.PI) / 180)
 
   return [
     { x: x1, y: y1 },
