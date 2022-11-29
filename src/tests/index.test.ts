@@ -47,23 +47,24 @@ describe('When game data is saved', () => {
     const points0 = getLandingCirclePoints(testGameState.aircrafts[0])
 
     expect(Math.round(points0[0].x)).toBe(90) //landing position
-    expect(Math.round(points0[0].y)).toBe(50 - 14)
+    expect(Math.round(points0[0].y)).toBe(50 + 14)
     expect(Math.round(points0[1].x)).toBe(90)
-    expect(Math.round(points0[1].y)).toBe(50 + 14)
+    expect(Math.round(points0[1].y)).toBe(50 - 14)
 
     const points5 = getLandingCirclePoints(testGameState.aircrafts[5])
 
-    expect(Math.round(points5[0].x)).toBe(testGameState.aircrafts[5].airportLandingPosition!.x - 14)
+    expect(Math.round(points5[0].x)).toBe(testGameState.aircrafts[5].airportLandingPosition!.x + 14)
     expect(Math.round(points5[0].y)).toBe(testGameState.aircrafts[5].airportLandingPosition!.y)
-    expect(Math.round(points5[1].x)).toBe(testGameState.aircrafts[5].airportLandingPosition!.x + 14)
+    expect(Math.round(points5[1].x)).toBe(testGameState.aircrafts[5].airportLandingPosition!.x - 14)
     expect(Math.round(points5[1].y)).toBe(testGameState.aircrafts[5].airportLandingPosition!.y)
 
-    const points7 = getLandingCirclePoints(testGameState.aircrafts[7])
+    //Opposite directions
+    const points2 = getLandingCirclePoints(testGameState.aircrafts[2])
 
-    expect(Math.round(points7[0].x)).toBe(testGameState.aircrafts[7].airportLandingPosition!.x + 10)
-    expect(Math.round(points7[0].y)).toBe(testGameState.aircrafts[7].airportLandingPosition!.y - 10)
-    expect(Math.round(points7[1].x)).toBe(testGameState.aircrafts[7].airportLandingPosition!.x + 10)
-    expect(Math.round(points7[1].y)).toBe(testGameState.aircrafts[7].airportLandingPosition!.y + 10)
+    expect(Math.round(points2[0].x)).toBe(testGameState.aircrafts[2].airportLandingPosition!.x )
+    expect(Math.round(points2[0].y)).toBe(testGameState.aircrafts[2].airportLandingPosition!.y + 14)
+    expect(Math.round(points2[1].x)).toBe(testGameState.aircrafts[2].airportLandingPosition!.x )
+    expect(Math.round(points2[1].y)).toBe(testGameState.aircrafts[2].airportLandingPosition!.y - 14)
   })
 })
 
@@ -79,4 +80,5 @@ describe('When steering planes', () => {
     expect(Math.round(closestPoint3.x)).toBe(90)
     expect(Math.round(closestPoint3.y)).toBe(-50 - 14)
   })
+
 })

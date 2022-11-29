@@ -55,7 +55,7 @@ const initialAircrafts: Aircraft[] = [
   },
   {
     id: '007',
-    name: 'drone',
+    name: 'pulu',
     position: { x: -50, y: -100 },
     direction: 270,
     speed: 5,
