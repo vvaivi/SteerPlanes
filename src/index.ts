@@ -2,6 +2,7 @@ import 'dotenv/config'
 import fetch from 'node-fetch'
 import open from 'open'
 import WebSocket from 'ws'
+import { findDestination, turnPlane } from './components/moves'
 import { GameInstance, Message, NoPlaneState } from './types'
 import { normalizeHeading } from './utils/math'
 import { message } from './utils/message'
@@ -9,13 +10,24 @@ import { message } from './utils/message'
 const frontend_base = 'noflight.monad.fi'
 const backend_base = 'noflight.monad.fi/backend'
 
-// Change this to your own implementation
 const generateCommands = (gameState: NoPlaneState) => {
   const { aircrafts } = gameState
   const commands = []
 
-  for (const { id, direction } of aircrafts) {
-    commands.push(`HEAD ${id} ${normalizeHeading(direction + 20)}`) // Go loopy loop
+  for (const aircraft of aircrafts) {
+    findDestination(gameState, aircraft)
+
+    //To avoid steering when not needed
+    const previousDirection = aircraft.direction
+    turnPlane(aircraft)
+
+    //console.log(aircraft.position.x, " ", aircraft.position.y ,  "  position")
+    //Examining if direction is really changed or just rounding error
+    if (Math.abs(previousDirection - aircraft.direction) > 3) {
+      commands.push(`HEAD ${aircraft.id} ${normalizeHeading(aircraft.direction)}`)
+      //console.log(aircraft.direction, " lentokone dir")
+      //console.log(aircraft.airportDirection! , " lentokenttä dir")
+    }
   }
 
   return commands

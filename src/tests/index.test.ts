@@ -1,5 +1,10 @@
 import { testGameState } from './test_helper'
-import { findDestination, selectClosestTangentPoint } from '../components/moves'
+import {
+  findDestination,
+  selectClosestTangentPoint,
+  selectNewDirection,
+  selectPointToHeadTo,
+} from '../components/moves'
 import { getLandingCirclePoints, getLandingCircleRadius } from '../components/path'
 
 describe('When game data is saved', () => {
@@ -87,5 +92,19 @@ describe('When steering planes', () => {
     const closestPoint3 = selectClosestTangentPoint(testGameState.aircrafts[3])
     expect(Math.round(closestPoint3.x)).toBe(90)
     expect(closestPoint3.y).toBe(-50 - 2 * getLandingCircleRadius(testGameState.aircrafts[3]))
+  })
+
+  test('Headed to tangent if airport direction is not straight forward ', async () => {
+    expect(selectPointToHeadTo(testGameState.aircrafts[2])).toStrictEqual(
+      testGameState.aircrafts[2].airportLandingPosition
+    )
+    expect(selectPointToHeadTo(testGameState.aircrafts[4])).toStrictEqual(
+      selectClosestTangentPoint(testGameState.aircrafts[4])
+    )
+  })
+
+  test('Direction selected correctly depending on distance to airport', async () => {
+    expect(selectNewDirection(testGameState.aircrafts[1])).toBe(testGameState.airports[1].direction)
+    expect(selectNewDirection(testGameState.aircrafts[0])).not.toBe(testGameState.airports[0].direction)
   })
 })
