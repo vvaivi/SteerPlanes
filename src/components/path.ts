@@ -34,17 +34,34 @@ export const getLandingCirclePoints = (aircraft: Aircraft) => {
     aircraft.airportLandingPosition!.y -
     getLandingCircleRadius(aircraft) * 2 * Math.cos((aircraft.airportDirection! * Math.PI) / 180)
 
+  const x3 =
+    aircraft.airportLandingPosition!.x +
+    getLandingCircleRadius(aircraft) * 2 * Math.sin((-aircraft.airportDirection! * Math.PI) / 180) //Convert to radians
+  const y3 =
+    aircraft.airportLandingPosition!.y +
+    getLandingCircleRadius(aircraft) * 2 * Math.cos((-aircraft.airportDirection! * Math.PI) / 180)
+
+  const x4 =
+    aircraft.airportLandingPosition!.x -
+    getLandingCircleRadius(aircraft) * 2 * Math.sin((-aircraft.airportDirection! * Math.PI) / 180)
+  const y4 =
+    aircraft.airportLandingPosition!.y -
+    getLandingCircleRadius(aircraft) * 2 * Math.cos((-aircraft.airportDirection! * Math.PI) / 180)
+
   return [
     { x: x1, y: y1 },
     { x: x2, y: y2 },
+    { x: x3, y: y3 },
+    { x: x4, y: y4 },
   ]
 }
 
 export const checkCollisionPossibility = (aircraft1: Aircraft, aircraft2: Aircraft) => {
-  //Possible to collide if planes are close enough each other and heading to different directions
+  //Pitää muuttaa oikeiks suunniks
   const directionToHead1 = getDirection(aircraft1.position, aircraft1.airportLandingPosition!)
   const directionToHead2 = getDirection(aircraft2.position, aircraft2.airportLandingPosition!)
 
+  //Possible to collide if planes are close enough each other and heading to unparallel directions
   ;(getDistance(aircraft1.position, aircraft2.position) <
     (aircraft1.collisionRadius + aircraft2.collisionRadius) * 1.5 &&
     Math.abs(directionToHead1 - directionToHead2) === 180) ||
@@ -52,4 +69,8 @@ export const checkCollisionPossibility = (aircraft1: Aircraft, aircraft2: Aircra
     ? turnPlane(aircraft1, aircraft2)
     : //If not close to collision turned normally
       turnPlane(aircraft1)
+}
+
+export const startingInsideAirport = (aircraft: Aircraft) => {
+  return getDistance(aircraft.position, aircraft.airportPosition!) < aircraft.airportLandingRadius! ? true : false
 }
