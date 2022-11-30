@@ -2,8 +2,9 @@ import 'dotenv/config'
 import fetch from 'node-fetch'
 import open from 'open'
 import WebSocket from 'ws'
-import { findDestination, turnPlane } from './components/moves'
-import { GameInstance, Message, NoPlaneState } from './types'
+import { findDestination, turnPlane, selectClosestTangentPoint } from './components/moves'
+import { checkCollisionPossibility } from './components/path'
+import { Aircraft, GameInstance, Message, NoPlaneState } from './types'
 import { normalizeHeading } from './utils/math'
 import { message } from './utils/message'
 
@@ -13,20 +14,23 @@ const backend_base = 'noflight.monad.fi/backend'
 const generateCommands = (gameState: NoPlaneState) => {
   const { aircrafts } = gameState
   const commands = []
+  let previousPlane: Aircraft = aircrafts[0]
 
   for (const aircraft of aircrafts) {
     findDestination(gameState, aircraft)
 
     //To avoid steering when not needed
     const previousDirection = aircraft.direction
-    turnPlane(aircraft)
 
-    //console.log(aircraft.position.x, " ", aircraft.position.y ,  "  position")
+    //Decided that first plane on the list can move unobstructed and other planes make way for it if needed
+    aircraft.id === aircrafts[0].id ? turnPlane(aircraft) : checkCollisionPossibility(aircraft, previousPlane)
+
+    //Saving for next round to be able to examine collision
+    previousPlane = aircraft
+
     //Examining if direction is really changed or just rounding error
-    if (Math.abs(previousDirection - aircraft.direction) > 3) {
+    if (Math.abs(previousDirection - aircraft.direction) > 1) {
       commands.push(`HEAD ${aircraft.id} ${normalizeHeading(aircraft.direction)}`)
-      //console.log(aircraft.direction, " lentokone dir")
-      //console.log(aircraft.airportDirection! , " lentokenttä dir")
     }
   }
 

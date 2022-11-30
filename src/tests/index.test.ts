@@ -1,9 +1,11 @@
 import { testGameState } from './test_helper'
 import {
   findDestination,
+  getDistance,
   selectClosestTangentPoint,
   selectNewDirection,
   selectPointToHeadTo,
+  turnPlane,
 } from '../components/moves'
 import { getLandingCirclePoints, getLandingCircleRadius } from '../components/path'
 
@@ -94,17 +96,81 @@ describe('When steering planes', () => {
     expect(closestPoint3.y).toBe(-50 - 2 * getLandingCircleRadius(testGameState.aircrafts[3]))
   })
 
-  test('Headed to tangent if airport direction is not straight forward ', async () => {
-    expect(selectPointToHeadTo(testGameState.aircrafts[2])).toStrictEqual(
-      testGameState.aircrafts[2].airportLandingPosition
+  test('Headed to tangent if airport direction is not (almost) straight forward ', async () => {
+    expect(selectPointToHeadTo(testGameState.aircrafts[8])).toStrictEqual(
+      testGameState.aircrafts[8].airportLandingPosition
     )
-    expect(selectPointToHeadTo(testGameState.aircrafts[4])).toStrictEqual(
-      selectClosestTangentPoint(testGameState.aircrafts[4])
+    expect(selectPointToHeadTo(testGameState.aircrafts[1])).toStrictEqual(
+      selectClosestTangentPoint(testGameState.aircrafts[1])
     )
   })
 
   test('Direction selected correctly depending on distance to airport', async () => {
     expect(selectNewDirection(testGameState.aircrafts[1])).toBe(testGameState.airports[1].direction)
     expect(selectNewDirection(testGameState.aircrafts[0])).not.toBe(testGameState.airports[0].direction)
+  })
+
+  test('Aircraft can be turned', async () => {
+    const initialDirection = testGameState.aircrafts[0].direction
+    turnPlane(testGameState.aircrafts[0])
+    const directionAfterTurning = testGameState.aircrafts[0].direction
+
+    expect(initialDirection).not.toBe(directionAfterTurning)
+  })
+
+  test('If possible to collide, turned away from other plane', async () => {
+    //Close enough to collide
+    expect(getDistance(testGameState.aircrafts[3].position, testGameState.aircrafts[0].position)).toBeLessThanOrEqual(
+      (testGameState.aircrafts[3].collisionRadius + testGameState.aircrafts[0].collisionRadius) * 1.5
+    )
+
+    const planeDirectionBeforeTurning = testGameState.aircrafts[3].direction
+    turnPlane(testGameState.aircrafts[3], testGameState.aircrafts[0])
+    const planeDirectionAfterAvoidingCollision = testGameState.aircrafts[3].direction
+
+    //Reset to original value
+    testGameState.aircrafts[3].direction = planeDirectionBeforeTurning
+    turnPlane(testGameState.aircrafts[3])
+
+    //Turned differently that would have without risk of collision
+    expect(testGameState.aircrafts[3].direction).not.toBe(planeDirectionAfterAvoidingCollision)
+  })
+
+  test('If not possible to collide, turned towards airport', async () => {
+    //Not close enough to collide
+    expect(
+      getDistance(testGameState.aircrafts[1].position, testGameState.aircrafts[0].position)
+    ).toBeGreaterThanOrEqual(
+      (testGameState.aircrafts[3].collisionRadius + testGameState.aircrafts[0].collisionRadius) * 1.5
+    )
+
+    const planeDirectionBeforeTurning = testGameState.aircrafts[1].direction
+    turnPlane(testGameState.aircrafts[1], testGameState.aircrafts[0])
+    const planeDirectionAfterAvoidingCollision = testGameState.aircrafts[1].direction
+
+    //Reset to original value
+    testGameState.aircrafts[1].direction = planeDirectionBeforeTurning
+    turnPlane(testGameState.aircrafts[1])
+
+    //Turned similarly than without examining collision possibility
+    expect(testGameState.aircrafts[1].direction).toBe(planeDirectionAfterAvoidingCollision)
+  })
+
+  test('If airplane routes are parallel, nobody gives way', async () => {
+    //Close enough to collide
+    expect(getDistance(testGameState.aircrafts[1].position, testGameState.aircrafts[8].position)).toBeLessThanOrEqual(
+      (testGameState.aircrafts[3].collisionRadius + testGameState.aircrafts[0].collisionRadius) * 1.5
+    )
+
+    const planeDirectionBeforeTurning = testGameState.aircrafts[1].direction
+    turnPlane(testGameState.aircrafts[1], testGameState.aircrafts[8])
+    const planeDirectionAfterAvoidingCollision = testGameState.aircrafts[1].direction
+
+    //Reset to original value
+    testGameState.aircrafts[1].direction = planeDirectionBeforeTurning
+    turnPlane(testGameState.aircrafts[1])
+
+    //Turned similarly than without examining collision possibility
+    expect(testGameState.aircrafts[1].direction).toBe(planeDirectionAfterAvoidingCollision)
   })
 })

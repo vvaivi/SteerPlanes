@@ -8,6 +8,7 @@ const initialAircrafts: Aircraft[] = [
     direction: 90,
     speed: 5,
     destination: 'A',
+    collisionRadius: 20,
   },
   //Inside an airport
   {
@@ -17,6 +18,7 @@ const initialAircrafts: Aircraft[] = [
     direction: 180,
     speed: 5,
     destination: 'B',
+    collisionRadius: 20,
   },
   //Directly infront airport but wrong way around
   {
@@ -26,15 +28,17 @@ const initialAircrafts: Aircraft[] = [
     direction: 180,
     speed: 5,
     destination: 'B',
+    collisionRadius: 20,
   },
   //To test collision
   {
     id: '004',
     name: 'vesitaso',
-    position: { x: -50, y: -100 },
+    position: { x: -70, y: -100 },
     direction: 270,
     speed: 5,
     destination: 'B',
+    collisionRadius: 20,
   },
   //To test different directions of airports
   {
@@ -44,6 +48,7 @@ const initialAircrafts: Aircraft[] = [
     direction: 270,
     speed: 5,
     destination: 'C',
+    collisionRadius: 20,
   },
   {
     id: '006',
@@ -52,6 +57,7 @@ const initialAircrafts: Aircraft[] = [
     direction: 270,
     speed: 5,
     destination: 'D',
+    collisionRadius: 20,
   },
   {
     id: '007',
@@ -60,6 +66,7 @@ const initialAircrafts: Aircraft[] = [
     direction: 270,
     speed: 5,
     destination: 'E',
+    collisionRadius: 20,
   },
   {
     id: '008',
@@ -68,6 +75,16 @@ const initialAircrafts: Aircraft[] = [
     direction: 45,
     speed: 5,
     destination: 'A',
+    collisionRadius: 20,
+  },
+  {
+    id: '009',
+    name: 'ufo',
+    position: { x: 100, y: -70 },
+    direction: 0,
+    speed: 5,
+    destination: 'A',
+    collisionRadius: 20,
   },
 ]
 

@@ -7,7 +7,7 @@ export const getDirection = (pointFrom: Point, pointTo: Point) => {
   return normalizeHeading(direction)
 }
 
-const getDistance = (pointFrom: Point, pointTo: Point) => {
+export const getDistance = (pointFrom: Point, pointTo: Point) => {
   return Math.sqrt(Math.pow(pointTo.x - pointFrom.x, 2) + Math.pow(pointTo.y - pointFrom.y, 2))
 }
 
@@ -36,7 +36,7 @@ export const selectClosestTangentPoint = (aircraft: Aircraft) => {
 }
 
 export const selectPointToHeadTo = (aircraft: Aircraft) => {
-  if (180 - Math.abs(aircraft.direction - aircraft.airportDirection!) < 90) {
+  if (Math.abs(aircraft.direction - aircraft.airportDirection!) < 40) {
     return aircraft.airportLandingPosition
   }
   //If cannot go straight to airport direction, headed to tangent point
@@ -53,10 +53,14 @@ export const selectNewDirection = (aircraft: Aircraft) => {
   return getDirection(aircraft.position, selectPointToHeadTo(aircraft)!)
 }
 
-export const turnPlane = (aircraft: Aircraft) => {
-  //Adjusting direction values to aivoid multiple conditional statements
+export const turnPlane = (aircraft: Aircraft, aircraftToGiveWayTo?: Aircraft) => {
   const oldDirection = aircraft.direction - 180
-  const aimDirection = selectNewDirection(aircraft)! - 180
+
+  let aimDirection
+  aircraftToGiveWayTo === undefined
+    ? (aimDirection = selectNewDirection(aircraft)! - 180)
+    : //If needed to give way for other plane, turned towards where it comes from
+      (aimDirection = getDirection(aircraft.position, aircraftToGiveWayTo.position))
 
   //Varible to determine direction of turning
   let n = 1

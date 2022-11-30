@@ -17,6 +17,7 @@ export interface Aircraft {
   direction: number
   speed: number
   destination: string
+  collisionRadius: number
   airportDirection?: number
   airportPosition?: Point
   airportLandingRadius?: number
