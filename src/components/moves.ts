@@ -1,6 +1,6 @@
 import { Aircraft, Airport, NoPlaneState, Point } from '../types'
 import { normalizeHeading } from '../utils/math'
-import { findLandingPoint, getLandingCirclePoints, getLandingCircleRadius, startingInsideAirport } from './path'
+import { findLandingPoint, getLandingCirclePoints, getLandingCircleRadius } from './path'
 
 export const getDirection = (pointFrom: Point, pointTo: Point) => {
   const direction = Math.atan2(pointTo.y - pointFrom.y, pointTo.x - pointFrom.x) * (180 / Math.PI) //Convert to degrees
@@ -38,7 +38,6 @@ export const selectClosestTangentPoint = (aircraft: Aircraft) => {
 
 export const selectPointToHeadTo = (aircraft: Aircraft) => {
   if (Math.abs(aircraft.direction - aircraft.airportDirection!) < 90) {
-    //Toimi 40
     return aircraft.airportLandingPosition
   }
   //If cannot go straight to airport direction, headed to tangent point
@@ -48,7 +47,7 @@ export const selectPointToHeadTo = (aircraft: Aircraft) => {
 export const selectNewDirection = (aircraft: Aircraft) => {
   const distanceToAirport = getDistance(aircraft.position, aircraft.airportLandingPosition!)
   //When reached landing circle can be turned towards landing point
-  if (distanceToAirport <= getLandingCircleRadius(aircraft) + aircraft.speed /*&& !startingInsideAirport(aircraft)*/) {
+  if (distanceToAirport <= getLandingCircleRadius(aircraft) + aircraft.speed) {
     return aircraft.airportDirection
   }
 
@@ -56,13 +55,13 @@ export const selectNewDirection = (aircraft: Aircraft) => {
 }
 
 export const turnPlane = (aircraft: Aircraft, aircraftToGiveWayTo?: Aircraft) => {
-  const oldDirection = aircraft.direction //- 180
+  const oldDirection = aircraft.direction
 
   let aimDirection
   aircraftToGiveWayTo === undefined
-    ? (aimDirection = selectNewDirection(aircraft)!) //- 180)
+    ? (aimDirection = selectNewDirection(aircraft)!)
     : //If needed to give way for other plane, turned towards where it comes from
-      (aimDirection = getDirection(aircraftToGiveWayTo.position, aircraft.position) + 180)
+      (aimDirection = getDirection(aircraftToGiveWayTo.position, aircraft.position))
 
   //Varible to determine direction of turning
   let n = 1
@@ -71,7 +70,7 @@ export const turnPlane = (aircraft: Aircraft, aircraftToGiveWayTo?: Aircraft) =>
   }
 
   Math.abs(oldDirection - aimDirection) <= 20
-    ? (aircraft.direction = aimDirection) //+ 180)
+    ? (aircraft.direction = aimDirection)
     : // If cannot turn fully to aim, turned 20 deg towards aim
     oldDirection >= aimDirection
     ? (aircraft.direction += n * 20)

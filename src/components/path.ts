@@ -1,5 +1,5 @@
 import { Aircraft } from '../types'
-import { getDirection, getDistance, turnPlane } from './moves'
+import { getDirection, getDistance, selectNewDirection, turnPlane } from './moves'
 
 export const findLandingPoint = (aircraft: Aircraft) => {
   //Sine rule
@@ -57,20 +57,21 @@ export const getLandingCirclePoints = (aircraft: Aircraft) => {
 }
 
 export const checkCollisionPossibility = (aircraft1: Aircraft, aircraft2: Aircraft) => {
-  //Pitää muuttaa oikeiks suunniks
-  const directionToHead1 = getDirection(aircraft1.position, aircraft1.airportLandingPosition!)
-  const directionToHead2 = getDirection(aircraft2.position, aircraft2.airportLandingPosition!)
+  //tee tangettipisteisiin tarkastelu et jos yhtä kaukana niin menee mikä on lähempänä lentokenttää
+  const directionToHead1 = selectNewDirection(aircraft1)!
+  const directionToHead2 = selectNewDirection(aircraft2)!
 
   //Possible to collide if planes are close enough each other and heading to unparallel directions
-  ;(getDistance(aircraft1.position, aircraft2.position) <
-    (aircraft1.collisionRadius + aircraft2.collisionRadius) * 1.5 &&
-    Math.abs(directionToHead1 - directionToHead2) === 180) ||
-  0
-    ? turnPlane(aircraft1, aircraft2)
-    : //If not close to collision turned normally
-      turnPlane(aircraft1)
-}
-
-export const startingInsideAirport = (aircraft: Aircraft) => {
-  return getDistance(aircraft.position, aircraft.airportPosition!) < aircraft.airportLandingRadius! ? true : false
+  if (
+    getDistance(aircraft1.position, aircraft2.position) <=
+      (aircraft1.collisionRadius + aircraft2.collisionRadius) * 1.5 &&
+    Math.abs(directionToHead1 - directionToHead2) != 180 &&
+    Math.abs(directionToHead1 - directionToHead2) != 0
+  ) {
+    turnPlane(aircraft1, aircraft2)
+  }
+  //If not close to collision turned normally
+  else {
+    turnPlane(aircraft1)
+  }
 }
