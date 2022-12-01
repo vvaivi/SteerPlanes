@@ -1,5 +1,5 @@
 import { Aircraft } from '../types'
-import { getDirection, getDistance, selectNewDirection, turnPlane } from './moves'
+import { getDistance, selectNewDirection, turnPlane } from './moves'
 
 export const findLandingPoint = (aircraft: Aircraft) => {
   //Sine rule
@@ -36,7 +36,7 @@ export const getLandingCirclePoints = (aircraft: Aircraft) => {
 
   const x3 =
     aircraft.airportLandingPosition!.x +
-    getLandingCircleRadius(aircraft) * 2 * Math.sin((-aircraft.airportDirection! * Math.PI) / 180) //Convert to radians
+    getLandingCircleRadius(aircraft) * 2 * Math.sin((-aircraft.airportDirection! * Math.PI) / 180)
   const y3 =
     aircraft.airportLandingPosition!.y +
     getLandingCircleRadius(aircraft) * 2 * Math.cos((-aircraft.airportDirection! * Math.PI) / 180)
@@ -57,7 +57,6 @@ export const getLandingCirclePoints = (aircraft: Aircraft) => {
 }
 
 export const checkCollisionPossibility = (aircraft1: Aircraft, aircraft2: Aircraft) => {
-  //tee tangettipisteisiin tarkastelu et jos yhtä kaukana niin menee mikä on lähempänä lentokenttää
   const directionToHead1 = selectNewDirection(aircraft1)!
   const directionToHead2 = selectNewDirection(aircraft2)!
 

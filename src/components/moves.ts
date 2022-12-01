@@ -23,16 +23,38 @@ export const findDestination = (gameState: NoPlaneState, aircraft: Aircraft) => 
   findLandingPoint(aircraft)
 }
 
+const compareTangentPoints = (point1: Point, point2: Point, aircraft: Aircraft) => {
+  //If points equally far from plane, selected one closest to airport
+  return getDistance(point1, aircraft.airportLandingPosition!) < getDistance(point2, aircraft.airportLandingPosition!)
+    ? getDistance(point1, aircraft.position)
+    : getDistance(point2, aircraft.position)
+}
+
 export const selectClosestTangentPoint = (aircraft: Aircraft) => {
   const tangentPoints = getLandingCirclePoints(aircraft)
-
   var distances: number[] = []
 
   for (const point of tangentPoints) {
-    distances.push(getDistance(point, aircraft.position))
+    if (
+      getDirection(aircraft.position, aircraft.airportLandingPosition!) !=
+      getDirection(point, aircraft.airportLandingPosition!)
+    ) {
+      const newDistance = getDistance(point, aircraft.position)
+
+      //Checking if same distance already saved
+      const found = distances.find((element) => element === newDistance)
+
+      found === undefined
+        ? distances.push(newDistance)
+        : distances.splice(
+            distances.indexOf(found),
+            1,
+            compareTangentPoints(tangentPoints[distances.indexOf(found)], point, aircraft)
+          )
+    }
   }
 
-  //Coordinates of a point that is closest to airplane
+  //Coordinates of selected point
   return tangentPoints[distances.indexOf(Math.min(...distances))]
 }
 

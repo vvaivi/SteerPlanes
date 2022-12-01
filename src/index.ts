@@ -18,15 +18,15 @@ const generateCommands = (gameState: NoPlaneState) => {
 
   for (const aircraft of aircrafts) {
     findDestination(gameState, aircraft)
-    console.log(aircraft.position)
-    console.log(aircraft.airportPosition)
 
     //To avoid steering when not needed
     const previousDirection = aircraft.direction
 
     //Decided that first plane on the list can move unobstructed and other planes make way for it if needed
     //Assumed that planes heading to same destination cannot collide
-    aircraft.id === aircrafts[0].id || aircraft.destination === previousPlane.destination ? turnPlane(aircraft) : checkCollisionPossibility(aircraft, previousPlane)
+    aircraft.id === aircrafts[0].id || aircraft.destination === previousPlane.destination
+      ? turnPlane(aircraft)
+      : checkCollisionPossibility(aircraft, previousPlane)
 
     //Saving for next round to be able to examine collision
     previousPlane = aircraft
